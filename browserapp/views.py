@@ -708,7 +708,7 @@ def _run_jobteaser_agent(email: str):
             Screenshot showing activation success page
             """,
             llm=llm,
-            #browser=browser,
+            browser=browser,
             step_timeout=600,
             available_file_paths=["/Users/sekponakokou/Desktop/ownprojects/AiBrowseAgent/cv_sitsope_kokou.pdf"],
             tools=tools,  # tes tools Gmail
@@ -806,7 +806,7 @@ def _run_job_apply(email: str):
         7. Donnes moi le lien de l'offre de stage postulé et un résumé de l'offre.
         """,
             llm=llm,
-            #browser=browser,
+            browser=browser,
             step_timeout=600,
             tools=tools,  # tes tools Gmail
         )

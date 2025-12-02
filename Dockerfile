@@ -1,11 +1,11 @@
-FROM python3.8-slim 
+FROM python:3.12.8-slim
 
 WORKDIR /app
 
-COPY  requirements.txt .
+COPY requirements.txt .
 
-RUN "pip install -r requirements.txt"
+RUN pip3 install -r requirements.txt
 
-COPY .  .
+COPY . .
 
-CMD [ "pyton3", "manage.py" , "runserver", "8000" ]
+CMD python manage.py runserver 0.0.0.0:80
