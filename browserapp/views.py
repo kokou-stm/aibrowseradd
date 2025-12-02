@@ -809,6 +809,7 @@ def _run_job_apply(email: str):
             browser=browser,
             step_timeout=600,
             tools=tools,  # tes tools Gmail
+            
         )
         history = await agent.run()
         print("JOB APPLY AGENT TERMINÉ →", history.final_result())
