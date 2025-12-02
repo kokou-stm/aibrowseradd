@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accès Gmail réussi !</title>
+</head>
+<body>
+    <h1>Autorisation réussie !</h1>
+    <p>Voici les 10 derniers emails de ta boîte Gmail :</p>
+    <ul>
+        {% for email in emails %}
+            <li><strong>{{ email.from }}</strong> — {{ email.subject }}</li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <a href="/">← Retour à l'accueil</a>
+</body>
+</html>

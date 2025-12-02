@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emails Gmail</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .email-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .email-item:hover {
+            background: #f5f5f5;
+        }
+        #email-content {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Auto apply for Job</h1>
+    <h2>Welcome to AutoApply</h2>
+
+<button onclick="hideShow()">Profile</button>
+    <form action="" style="display: none;" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- CV -->
+    <label for="cv">CV actuel :</label><br>
+    {% if job_infos.cv_url %}
+        <a href="{{ job_infos.cv_url }}" target="_blank">Voir le CV</a><br><br>
+    {% endif %}
+    <input type="file" name="cv" id="cv">
+
+    <hr>
+
+    <!-- CONTRAT -->
+    <h3>Type de contrat :</h3>
+    {% for value in job_infos.contrat %}
+        <label>
+            <input type="checkbox" name="contrat" value="{{ value }}"
+                {% if value in job_infos.contrat %}checked{% endif %}>
+            {{ value }}
+        </label><br>
+    {% endfor %}
+
+    <hr>
+
+    <!-- LOCATION -->
+    <h3>Localisation :</h3>
+    {% for value in job_infos.location %}
+        <label>
+            <input type="checkbox" name="location" value="{{ value }}"
+                {% if value in job_infos.location %}checked{% endif %}>
+            {{ value }}
+        </label><br>
+    {% endfor %}
+
+    <hr>
+
+    <!-- PAYS -->
+    <h3>Pays :</h3>
+    {% for value in job_infos.pays %}
+        <label>
+            <input type="checkbox" name="pays" value="{{ value }}"
+                {% if value in job_infos.pays %}checked{% endif %}>
+            {{ value }}
+        </label><br>
+    {% endfor %}
+
+    <hr>
+
+    <!-- DUREE -->
+    <h3>Durée (en mois)</h3>
+    <input type="number" name="duree" id="duree" 
+           value="{{ job_infos.duree|default:'' }}">
+
+    <hr>
+
+    <!-- LANGUE -->
+    <h3>Langues :</h3>
+    {% for value in job_infos.langue %}
+        <label>
+            <input type="checkbox" name="langue" value="{{ value }}"
+                {% if value in job_infos.langue %}checked{% endif %}>
+            {{ value }}
+        </label><br>
+    {% endfor %}
+
+    <hr>
+
+    <!-- DOMAINE -->
+    <h3>Domaine :</h3>
+    {% for value in job_infos.domaine %}
+        <label>
+            <input type="checkbox" name="domaine" value="{{ value }}"
+                {% if value in job_infos.domaine %}checked{% endif %}>
+            {{ value }}
+        </label><br>
+    {% endfor %}
+
+    <hr>
+
+    <!-- ANOTHER INFO -->
+    <h3>Autres informations</h3>
+    <textarea name="anotherinfo" id="anotherinfo" rows="5">{{ job_infos.anotherinfo }}</textarea>
+
+    <hr>
+
+    <button type="submit">Enregistrer</button>
+</form>
+
+
+
+    <!--demo Video-->
+  <video width="600" autoplay muted loop>
+    <source src="{% static 'video.mp4' %}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+ 
+  {% if user.is_authenticated %}
+    <!--a href="{% url 'gmail_auth' %}">GmailAuth</a-->
+    <br><br>
+    <a href="{% url 'gmail_logout' %}">Logout</a>
+    <a href="{% url 'run_main' %}">Run Main</a>
+    <br><br>
+    <a href="{% url 'apply_job' %}">Apply Job</a> 
+    <br><br>
+    
+
+
+
+
+ <form action="{% url 'send_job_infos' %}" method="post" id="job_infos" onsubmit="sen_job_infos(event)" enctype="multipart/form-data">
+{% csrf_token %}
+    <label for="cv">CV :</label>
+    <input type="file" name="cv" id="cv" />
+
+    <!-- CONTRAT -->
+    <div>
+        <p>Type de contrat :</p>
+        <label><input type="checkbox" name="contrat[]" value="alternance"> Alternance</label>
+        <label><input type="checkbox" name="contrat[]" value="cdi"> CDI</label>
+        <label><input type="checkbox" name="contrat[]" value="cdd"> CDD</label>
+        <label><input type="checkbox" name="contrat[]" value="stage"> Stage</label>
+        <label><input type="checkbox" name="contrat[]" value="interim"> Intérim</label>
+    </div>
+
+    <!-- LOCATION -->
+    <div>
+        <p>Localisation :</p>
+        <label><input type="checkbox" name="location[]" value="remote"> Remote</label>
+        <label><input type="checkbox" name="location[]" value="onsite"> Sur site</label>
+        <label><input type="checkbox" name="location[]" value="hybrid"> Hybride</label>
+    </div>
+
+    <!-- PAYS -->
+    <div>
+        <p>Pays :</p>
+        <label><input type="checkbox" name="pays[]" value="france"> France</label>
+        <label><input type="checkbox" name="pays[]" value="belgique"> Belgique</label>
+        <label><input type="checkbox" name="pays[]" value="suisse"> Suisse</label>
+        <label><input type="checkbox" name="pays[]" value="canada"> Canada</label>
+        <label><input type="checkbox" name="pays[]" value="luxembourg"> Luxembourg</label>
+        <label><input type="checkbox" name="pays[]" value="tout"> Tout</label>
+    </div>
+
+    <input type="number" placeholder="Durée (en mois)" id="duree" name="duree" />
+
+    <label for="Langue">Langue :</label>
+    <div>
+        <label><input type="checkbox" name="langue[]" value="francais"> Français</label>
+        <label><input type="checkbox" name="langue[]" value="anglais"> Anglais</label>
+        <label><input type="checkbox" name="langue[]" value="autre"> Autre</label>
+    </div>
+
+    <!-- DOMAINE -->
+    <div>
+        <p>Domaine :</p>
+        <label><input type="checkbox" name="domaine[]" value="Informatique"> Informatique</label>
+        <label><input type="checkbox" name="domaine[]" value="Marketing"> Marketing</label>
+        <label><input type="checkbox" name="domaine[]" value="Finance"> Finance</label>
+        <label><input type="checkbox" name="domaine[]" value="Ressources Humaines"> Ressources Humaines</label>
+        <label><input type="checkbox" name="domaine[]" value="Vente"> Vente</label>
+        <label><input type="checkbox" name="domaine[]" value="Design"> Design</label>
+        <label><input type="checkbox" name="domaine[]" value="Autre"> Autre</label>
+    </div>
+
+    <textarea name="anotherinfo" id="anotherinfo" placeholder="Autres informations..."></textarea>
+
+    <button type="submit">Envoyer</button>
+</form>
+
+
+
+     <button onclick="getGmail()">Get Gmail</button>
+       <h2 id="user-header"></h2>
+    <div id="gmail-emails"></div>
+
+    <h3>Contenu de l’email :</h3>
+    <div id="email-content">Clique sur un email pour voir son contenu.</div>
+
+     <br><br>
+
+
+    {% else %}
+    <br><br>
+
+    <a href="{% url 'google_login' %}">Login</a>
+    {% endif %}
+    
+   
+
+  
+
+    <script>
+
+            function hideShow() {
+                var form = document.querySelector('form');
+                if (form.style.display === 'none' || form.style.display === '') {
+                    form.style.display = 'block';
+                } else {
+                    form.style.display = 'none';
+                }
+            }
+        async function getGmail() {
+            const response = await fetch("{% url 'get_gmail' %}");
+            const data = await response.json();
+            console.log(data);
+
+            document.getElementById("user-header").innerText = 
+                `Emails de ${data.user_email}`;
+
+            const emailsDiv = document.getElementById('gmail-emails');
+            emailsDiv.innerHTML = '';
+
+            data.emails.forEach((email, index) => {
+                const div = document.createElement("div");
+                div.classList.add("email-item");
+                div.innerHTML = `
+                    <strong>${email.subject}</strong><br>
+                    <small>${email.from}</small><br>
+                    <small>${email.date}</small>
+                `;
+                div.addEventListener("click", () => showEmail(email));
+                emailsDiv.appendChild(div);
+            });
+        }
+
+        function showEmail(email) {
+            const contentDiv = document.getElementById('email-content');
+
+            /* Si HTML disponible → on l’affiche dans un iframe
+            if (email.html && email.html.length > 5) {
+                contentDiv.innerHTML = `
+                    <iframe 
+                        style="width:100%; height:300px; border:0;" 
+                        srcdoc="${email.html.replace(/"/g, '&quot;')}">
+                    </iframe>
+                `;
+                return;
+            } */
+
+            // Sinon on affiche le texte brut
+            contentDiv.innerText = email.text || "(Pas de contenu)";
+        }
+    
+    
+        async function sen_job_infos(event) {
+            event.preventDefault();
+    
+            const form = document.getElementById('job_infos');
+            const formData = new FormData(form);
+    
+            const response = await fetch("{% url 'send_job_infos' %}", {
+                method: "POST",
+                body: formData
+            });
+    
+            if (response.ok) {
+                alert("Informations envoyées avec succès !");
+            } else {
+                alert("Erreur lors de l'envoi des informations.");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+name: Deploy Django to Azure Container Instance
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Récupérer le code source
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Se connecter à Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Étape 3 : Connexion au registre Azure Container Registry
+      - name: Log in to Azure Container Registry
+        run: echo "${{ secrets.AZURE_REGISTRY_PASSWORD }}" | docker login chezquizregister.azurecr.io -u "${{ secrets.AZURE_REGISTRY_USERNAME }}" --password-stdin
+
+      # Étape 4 : Construire l'image Docker
+      - name: Build Docker image
+        run: docker build -t chezquizregister.azurecr.io/aibrowser:latest .
+
+      # Étape 5 : Pousser l'image Docker vers le registre
+      - name: Push Docker image
+        run: docker push chezquizregister.azurecr.io/aibrowser:latest
+
+     
